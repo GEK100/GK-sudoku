@@ -17,7 +17,7 @@ class SudokuGame {
     this.isComplete = false;
 
     // Current difficulty and puzzle index
-    this.difficulty = 'intermediate';
+    this.difficulty = 'expert';
     this.puzzleIndex = 0;
 
     // Progress tracking
@@ -75,16 +75,6 @@ class SudokuGame {
     // Menu
     document.getElementById('menu-btn').addEventListener('click', () => this.showMenu());
     document.getElementById('close-menu').addEventListener('click', () => this.hideMenu());
-
-    // Difficulty tabs
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.difficulty = btn.dataset.difficulty;
-        this.updatePuzzleList();
-      });
-    });
 
     // Theme toggle
     document.getElementById('theme-btn').addEventListener('click', () => this.toggleTheme());
@@ -507,12 +497,6 @@ class SudokuGame {
   // Menu and puzzle selection
   showMenu() {
     document.getElementById('menu-modal').classList.remove('hidden');
-
-    // Set active tab
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.difficulty === this.difficulty);
-    });
-
     this.updatePuzzleList();
   }
 
@@ -549,13 +533,7 @@ class SudokuGame {
   }
 
   updateHeader() {
-    const difficultyLabels = {
-      intermediate: 'Intermediate',
-      hard: 'Hard',
-      expert: 'Expert'
-    };
-
-    document.getElementById('difficulty-label').textContent = difficultyLabels[this.difficulty];
+    document.getElementById('difficulty-label').textContent = 'Expert';
     document.getElementById('puzzle-number').textContent = `#${this.puzzleIndex + 1}`;
   }
 
@@ -573,23 +551,14 @@ class SudokuGame {
   nextPuzzle() {
     this.hideWinModal();
 
-    const puzzles = PUZZLES[this.difficulty];
+    const puzzles = PUZZLES.expert;
     let nextIndex = this.puzzleIndex + 1;
 
     if (nextIndex >= puzzles.length) {
-      // Move to next difficulty or wrap around
-      const difficulties = ['intermediate', 'hard', 'expert'];
-      const currentDiffIndex = difficulties.indexOf(this.difficulty);
-
-      if (currentDiffIndex < difficulties.length - 1) {
-        this.difficulty = difficulties[currentDiffIndex + 1];
-        nextIndex = 0;
-      } else {
-        nextIndex = 0; // Start from beginning of current difficulty
-      }
+      nextIndex = 0; // Wrap around to first puzzle
     }
 
-    this.loadPuzzle(this.difficulty, nextIndex);
+    this.loadPuzzle('expert', nextIndex);
   }
 
   // Progress tracking
@@ -636,7 +605,7 @@ class SudokuGame {
       try {
         const state = JSON.parse(saved);
 
-        this.difficulty = state.difficulty || 'intermediate';
+        this.difficulty = 'expert';
         this.puzzleIndex = state.puzzleIndex || 0;
 
         // Load the puzzle data
@@ -678,7 +647,7 @@ class SudokuGame {
     }
 
     // Load first puzzle if no saved game
-    this.loadPuzzle('intermediate', 0);
+    this.loadPuzzle('expert', 0);
   }
 
   // Theme

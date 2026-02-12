@@ -1,5 +1,5 @@
 // Service Worker for Sudoku PWA
-const CACHE_NAME = 'sudoku-v2';
+const CACHE_NAME = 'sudoku-v3';
 const BASE_PATH = self.location.pathname.replace(/\/[^\/]*$/, '/');
 
 const urlsToCache = [
