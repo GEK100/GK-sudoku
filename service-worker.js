@@ -1,15 +1,17 @@
 // Service Worker for Sudoku PWA
-const CACHE_NAME = 'sudoku-v1';
+const CACHE_NAME = 'sudoku-v2';
+const BASE_PATH = self.location.pathname.replace(/\/[^\/]*$/, '/');
+
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/puzzle-generator.js',
-  '/puzzles.js',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  './',
+  './index.html',
+  './styles.css',
+  './app.js',
+  './puzzle-generator.js',
+  './puzzles.js',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 // Install event - cache assets
@@ -74,9 +76,9 @@ self.addEventListener('fetch', event => {
         });
       })
       .catch(() => {
-        // If both cache and network fail, return a fallback
+        // If both cache and network fail, return the cached index
         if (event.request.destination === 'document') {
-          return caches.match('/index.html');
+          return caches.match('./index.html');
         }
       })
   );
